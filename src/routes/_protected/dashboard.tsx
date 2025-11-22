@@ -15,13 +15,21 @@ import {
   Plus,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useOrganizations } from '@/hooks/use-organizations';
+import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 export const Route = createFileRoute('/_protected/dashboard')({
   component: DashboardPage,
 });
 
-function DashboardPage() {
+export function DashboardPage() {
   const { user } = useAuth();
+  const { data: organizations, isLoading } = useOrganizations();
+  console.log(organizations);
+
+  if (isLoading) {
+    return <LoadingSpinner fullScreen />;
+  }
 
   return (
     <div className="container py-8">
@@ -42,7 +50,9 @@ function DashboardPage() {
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">0</div>
+            <div className="text-2xl font-bold">
+              {isLoading ? '...' : organizations?.length}
+            </div>
             <p className="text-xs text-muted-foreground">Total organizations</p>
           </CardContent>
         </Card>
@@ -53,7 +63,14 @@ function DashboardPage() {
             <FolderKanban className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">0</div>
+            <div className="text-2xl font-bold">
+              {isLoading
+                ? '...'
+                : organizations?.reduce(
+                    (acc, org) => acc + org.projectCount,
+                    0,
+                  )}
+            </div>
             <p className="text-xs text-muted-foreground">
               Across all organizations
             </p>
@@ -95,17 +112,55 @@ function DashboardPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-2 sm:flex-row">
-          <Link to="/">
+          <Link to="/organizations">
             <Button className="gap-2">
               <Plus className="h-4 w-4" />
               Create Organization
             </Button>
           </Link>
-          <Link to="/">
+          <Link to="/organizations">
             <Button variant="outline">View All Organizations</Button>
           </Link>
         </CardContent>
       </Card>
+
+      {/* Recent Organizations */}
+      {organizations.length > 0 && (
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle>Recent Organizations</CardTitle>
+            <CardDescription>
+              Your most recently created organizations
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {organizations.slice(0, 5).map((org) => (
+                <Link
+                  key={org.id}
+                  to="/organizations/$orgId"
+                  params={{ orgId: org.id.toString() }}
+                  className="flex items-center justify-between rounded-lg border p-4 hover:bg-muted/50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <Building2 className="h-8 w-8 text-primary" />
+                    <div>
+                      <p className="font-medium">{org.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {org.projectCount} project
+                        {org.projectCount !== 1 ? 's' : ''}
+                      </p>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="sm">
+                    View →
+                  </Button>
+                </Link>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

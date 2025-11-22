@@ -17,6 +17,8 @@ import { Route as PublicDocsRouteImport } from './routes/_public/docs'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as ProtectedOrganizationsIndexRouteImport } from './routes/_protected/organizations/index'
+import { Route as ProtectedOrganizationsOrgIdRouteImport } from './routes/_protected/organizations/$orgId'
 
 const PublicRouteRoute = PublicRouteRouteImport.update({
   id: '/_public',
@@ -55,6 +57,18 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const ProtectedOrganizationsIndexRoute =
+  ProtectedOrganizationsIndexRouteImport.update({
+    id: '/organizations/',
+    path: '/organizations/',
+    getParentRoute: () => ProtectedRouteRoute,
+  } as any)
+const ProtectedOrganizationsOrgIdRoute =
+  ProtectedOrganizationsOrgIdRouteImport.update({
+    id: '/organizations/$orgId',
+    path: '/organizations/$orgId',
+    getParentRoute: () => ProtectedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
@@ -62,6 +76,8 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof ProtectedDashboardRoute
   '/docs': typeof PublicDocsRoute
   '/': typeof PublicIndexRoute
+  '/organizations/$orgId': typeof ProtectedOrganizationsOrgIdRoute
+  '/organizations': typeof ProtectedOrganizationsIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
@@ -69,6 +85,8 @@ export interface FileRoutesByTo {
   '/dashboard': typeof ProtectedDashboardRoute
   '/docs': typeof PublicDocsRoute
   '/': typeof PublicIndexRoute
+  '/organizations/$orgId': typeof ProtectedOrganizationsOrgIdRoute
+  '/organizations': typeof ProtectedOrganizationsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,12 +98,28 @@ export interface FileRoutesById {
   '/_protected/dashboard': typeof ProtectedDashboardRoute
   '/_public/docs': typeof PublicDocsRoute
   '/_public/': typeof PublicIndexRoute
+  '/_protected/organizations/$orgId': typeof ProtectedOrganizationsOrgIdRoute
+  '/_protected/organizations/': typeof ProtectedOrganizationsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/register' | '/dashboard' | '/docs' | '/'
+  fullPaths:
+    | '/login'
+    | '/register'
+    | '/dashboard'
+    | '/docs'
+    | '/'
+    | '/organizations/$orgId'
+    | '/organizations'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/register' | '/dashboard' | '/docs' | '/'
+  to:
+    | '/login'
+    | '/register'
+    | '/dashboard'
+    | '/docs'
+    | '/'
+    | '/organizations/$orgId'
+    | '/organizations'
   id:
     | '__root__'
     | '/_auth'
@@ -96,6 +130,8 @@ export interface FileRouteTypes {
     | '/_protected/dashboard'
     | '/_public/docs'
     | '/_public/'
+    | '/_protected/organizations/$orgId'
+    | '/_protected/organizations/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -162,6 +198,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_protected/organizations/': {
+      id: '/_protected/organizations/'
+      path: '/organizations'
+      fullPath: '/organizations'
+      preLoaderRoute: typeof ProtectedOrganizationsIndexRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/organizations/$orgId': {
+      id: '/_protected/organizations/$orgId'
+      path: '/organizations/$orgId'
+      fullPath: '/organizations/$orgId'
+      preLoaderRoute: typeof ProtectedOrganizationsOrgIdRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
   }
 }
 
@@ -181,10 +231,14 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 
 interface ProtectedRouteRouteChildren {
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
+  ProtectedOrganizationsOrgIdRoute: typeof ProtectedOrganizationsOrgIdRoute
+  ProtectedOrganizationsIndexRoute: typeof ProtectedOrganizationsIndexRoute
 }
 
 const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
   ProtectedDashboardRoute: ProtectedDashboardRoute,
+  ProtectedOrganizationsOrgIdRoute: ProtectedOrganizationsOrgIdRoute,
+  ProtectedOrganizationsIndexRoute: ProtectedOrganizationsIndexRoute,
 }
 
 const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
