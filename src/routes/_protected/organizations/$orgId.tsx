@@ -164,7 +164,11 @@ export function OrganizationDetail() {
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <Link to="/projects/$projectId" className="flex-1">
+                    <Link
+                      to="/projects/$projectId"
+                      params={{ projectId: project.id.toString() }}
+                      className="flex-1"
+                    >
                       <CardTitle className="hover:text-primary transition-colors">
                         {project.name}
                       </CardTitle>

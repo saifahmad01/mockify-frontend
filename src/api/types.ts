@@ -84,6 +84,58 @@ export interface MockSchemaSummary {
   createdAt: string;
 }
 
+export interface MockSchema {
+  id: number;
+  name: string;
+  projectId: number;
+  projectName: string;
+  schemaJson: Record<string, object>;
+  createdAt: string;
+  recordCount: number;
+  endpointUrl: string;
+}
+
+export interface MockSchemaDetail {
+  id: number;
+  name: string;
+  project: {
+    id: number;
+    name: string;
+    organizationName: string;
+  };
+  schemaJson: Record<string, object>;
+  createdAt: string;
+  stats: SchemaStats;
+  recentRecords: MockRecordSummary[];
+}
+
+export interface SchemaStats {
+  totalRecords: number;
+  activeRecords: number;
+  expiredRecords: number;
+  oldestRecord?: string;
+  newestRecord?: string;
+}
+
+export interface MockRecordSummary {
+  id: number;
+  data: Record<string, any>;
+  createdAt: string;
+  expiresAt: string;
+  expired: boolean;
+}
+
+export interface MockRecord {
+  id: number;
+  schemaId: number;
+  schemaName: string;
+  data: Record<string, any>;
+  createdAt: string;
+  expiresAt: string;
+  expired: boolean;
+  ttlMinutes: number;
+}
+
 export interface ApiError {
   status: number;
   error: string;

@@ -18,6 +18,8 @@ import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dash
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as ProtectedOrganizationsIndexRouteImport } from './routes/_protected/organizations/index'
+import { Route as ProtectedSchemasSchemaIdRouteImport } from './routes/_protected/schemas/$schemaId'
+import { Route as ProtectedProjectsProjectIdRouteImport } from './routes/_protected/projects/$projectId'
 import { Route as ProtectedOrganizationsOrgIdRouteImport } from './routes/_protected/organizations/$orgId'
 
 const PublicRouteRoute = PublicRouteRouteImport.update({
@@ -63,6 +65,18 @@ const ProtectedOrganizationsIndexRoute =
     path: '/organizations/',
     getParentRoute: () => ProtectedRouteRoute,
   } as any)
+const ProtectedSchemasSchemaIdRoute =
+  ProtectedSchemasSchemaIdRouteImport.update({
+    id: '/schemas/$schemaId',
+    path: '/schemas/$schemaId',
+    getParentRoute: () => ProtectedRouteRoute,
+  } as any)
+const ProtectedProjectsProjectIdRoute =
+  ProtectedProjectsProjectIdRouteImport.update({
+    id: '/projects/$projectId',
+    path: '/projects/$projectId',
+    getParentRoute: () => ProtectedRouteRoute,
+  } as any)
 const ProtectedOrganizationsOrgIdRoute =
   ProtectedOrganizationsOrgIdRouteImport.update({
     id: '/organizations/$orgId',
@@ -77,6 +91,8 @@ export interface FileRoutesByFullPath {
   '/docs': typeof PublicDocsRoute
   '/': typeof PublicIndexRoute
   '/organizations/$orgId': typeof ProtectedOrganizationsOrgIdRoute
+  '/projects/$projectId': typeof ProtectedProjectsProjectIdRoute
+  '/schemas/$schemaId': typeof ProtectedSchemasSchemaIdRoute
   '/organizations': typeof ProtectedOrganizationsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -86,6 +102,8 @@ export interface FileRoutesByTo {
   '/docs': typeof PublicDocsRoute
   '/': typeof PublicIndexRoute
   '/organizations/$orgId': typeof ProtectedOrganizationsOrgIdRoute
+  '/projects/$projectId': typeof ProtectedProjectsProjectIdRoute
+  '/schemas/$schemaId': typeof ProtectedSchemasSchemaIdRoute
   '/organizations': typeof ProtectedOrganizationsIndexRoute
 }
 export interface FileRoutesById {
@@ -99,6 +117,8 @@ export interface FileRoutesById {
   '/_public/docs': typeof PublicDocsRoute
   '/_public/': typeof PublicIndexRoute
   '/_protected/organizations/$orgId': typeof ProtectedOrganizationsOrgIdRoute
+  '/_protected/projects/$projectId': typeof ProtectedProjectsProjectIdRoute
+  '/_protected/schemas/$schemaId': typeof ProtectedSchemasSchemaIdRoute
   '/_protected/organizations/': typeof ProtectedOrganizationsIndexRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +130,8 @@ export interface FileRouteTypes {
     | '/docs'
     | '/'
     | '/organizations/$orgId'
+    | '/projects/$projectId'
+    | '/schemas/$schemaId'
     | '/organizations'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -119,6 +141,8 @@ export interface FileRouteTypes {
     | '/docs'
     | '/'
     | '/organizations/$orgId'
+    | '/projects/$projectId'
+    | '/schemas/$schemaId'
     | '/organizations'
   id:
     | '__root__'
@@ -131,6 +155,8 @@ export interface FileRouteTypes {
     | '/_public/docs'
     | '/_public/'
     | '/_protected/organizations/$orgId'
+    | '/_protected/projects/$projectId'
+    | '/_protected/schemas/$schemaId'
     | '/_protected/organizations/'
   fileRoutesById: FileRoutesById
 }
@@ -205,6 +231,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedOrganizationsIndexRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
+    '/_protected/schemas/$schemaId': {
+      id: '/_protected/schemas/$schemaId'
+      path: '/schemas/$schemaId'
+      fullPath: '/schemas/$schemaId'
+      preLoaderRoute: typeof ProtectedSchemasSchemaIdRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/projects/$projectId': {
+      id: '/_protected/projects/$projectId'
+      path: '/projects/$projectId'
+      fullPath: '/projects/$projectId'
+      preLoaderRoute: typeof ProtectedProjectsProjectIdRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
     '/_protected/organizations/$orgId': {
       id: '/_protected/organizations/$orgId'
       path: '/organizations/$orgId'
@@ -232,12 +272,16 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 interface ProtectedRouteRouteChildren {
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
   ProtectedOrganizationsOrgIdRoute: typeof ProtectedOrganizationsOrgIdRoute
+  ProtectedProjectsProjectIdRoute: typeof ProtectedProjectsProjectIdRoute
+  ProtectedSchemasSchemaIdRoute: typeof ProtectedSchemasSchemaIdRoute
   ProtectedOrganizationsIndexRoute: typeof ProtectedOrganizationsIndexRoute
 }
 
 const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
   ProtectedDashboardRoute: ProtectedDashboardRoute,
   ProtectedOrganizationsOrgIdRoute: ProtectedOrganizationsOrgIdRoute,
+  ProtectedProjectsProjectIdRoute: ProtectedProjectsProjectIdRoute,
+  ProtectedSchemasSchemaIdRoute: ProtectedSchemasSchemaIdRoute,
   ProtectedOrganizationsIndexRoute: ProtectedOrganizationsIndexRoute,
 }
 
