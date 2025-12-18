@@ -7,6 +7,7 @@ import {
   useLogout,
   useRegister,
 } from '@/hooks/use-auth';
+import { useAuthBootstrap } from '@/hooks/useAuthBootstrap';
 
 export interface AuthContextType {
   user: User | null;
@@ -31,27 +32,33 @@ export function AuthContextProvider({
   children: React.ReactNode;
 }) {
   const { data: user, isLoading } = useCurrentUser();
+  const { isLoading: bootstrapping } = useAuthBootstrap();
+
   const loginMutation = useLogin();
   const registerMutation = useRegister();
   const logoutMutation = useLogout();
 
-  const value = {
-    user: user ?? null,
-    isAuthenticated: !!user,
-    isLoading,
-
-    login: async (email: string, password: string) =>
-      loginMutation.mutateAsync({ email, password }),
-
-    register: async (name: string, email: string, password: string) =>
-      registerMutation.mutateAsync({ name, email, password }),
-
-    logout: async () => logoutMutation.mutateAsync(),
-  };
-
-  if (isLoading) {
+  if (bootstrapping || isLoading) {
     return <LoadingSpinner fullScreen />;
   }
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  const value: AuthContextType = {
+    user: user ?? null,
+    isAuthenticated: !!user,
+    isLoading: false,
+
+    login: (email, password) =>
+      loginMutation.mutateAsync({ email, password }),
+
+    register: (name, email, password) =>
+      registerMutation.mutateAsync({ name, email, password }),
+
+    logout: () => logoutMutation.mutateAsync(),
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
