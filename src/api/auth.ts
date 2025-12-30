@@ -26,6 +26,11 @@ export const authApi = {
     await apiClient.post('/auth/logout');
   },
 
+  refresh: async (): Promise<AuthResponse> => {
+    const response = await apiClient.post<AuthResponse>('/auth/refresh');
+    return response.data;
+  },
+
   getGoogleAuthUrl: (): string => {
     const baseUrl =
       import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/';

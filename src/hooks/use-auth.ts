@@ -6,16 +6,16 @@ import { tokenStore } from '@/api/token';
 
 export const CURRENT_USER_KEY = ['auth', 'me'];
 
-export function useCurrentUser() {
+export function useCurrentUser(options?: { enabled: boolean }) {
   return useQuery<User>({
     queryKey: CURRENT_USER_KEY,
     queryFn: authApi.getCurrentUser,
     retry: false,
-    staleTime: 0,
+    staleTime: Infinity,
     refetchOnWindowFocus: false,
+    enabled: options?.enabled ?? true,
   });
 }
-
 
 export function useLogin() {
   const queryClient = useQueryClient();
@@ -24,10 +24,6 @@ export function useLogin() {
     mutationFn: (data: LoginRequest) => authApi.login(data),
 
     onSuccess: async (res) => {
-      
-      // For debugging
-      console.log('Login success:', res);
-
       tokenStore.set(res.access_token);
 
       await queryClient.invalidateQueries({
@@ -50,7 +46,7 @@ export function useRegister() {
 
     onSuccess: async (res) => {
       tokenStore.set(res.access_token);
-          
+
       await queryClient.invalidateQueries({
         queryKey: CURRENT_USER_KEY,
       });
@@ -71,16 +67,40 @@ export function useLogout() {
 
     onSuccess: () => {
       tokenStore.clear();
-      queryClient.removeQueries({ queryKey: CURRENT_USER_KEY });
+      queryClient.setQueryData(CURRENT_USER_KEY, null);
       toast.success('Logged out');
     },
     onError: () => {
       tokenStore.clear();
-      queryClient.removeQueries({ queryKey: CURRENT_USER_KEY });
+      queryClient.setQueryData(CURRENT_USER_KEY, null);
     },
   });
 }
 
+export function useAuthBootstrap() {
+  const queryClient = useQueryClient();
+
+  return useQuery({
+    queryKey: ['auth', 'bootstrap'],
+    queryFn: async () => {
+      try {
+        const res = await authApi.refresh();
+        tokenStore.set(res.access_token);
+        await queryClient.invalidateQueries({
+          queryKey: CURRENT_USER_KEY,
+        });
+
+        return res.user;
+      } catch {
+        tokenStore.clear();
+        return null;
+      }
+    },
+    retry: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
+}
 
 export function useGoogleLogin() {
   return {

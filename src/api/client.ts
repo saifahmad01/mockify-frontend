@@ -6,8 +6,8 @@ const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
 export const apiClient = axios.create({
-  baseURL: `${API_BASE_URL}/api/v1`,
-   withCredentials: true,   // Cookies are sent with every request
+  baseURL: `${API_BASE_URL}/api`,
+  withCredentials: true, // Cookies are sent with every request
 });
 
 // Request interceptor to add Authorization header
@@ -57,11 +57,11 @@ apiClient.interceptors.response.use(
     } catch {
       tokenStore.clear();
       return Promise.reject(error);
+    } finally {
+      tokenStore.setRefreshPromise(null);
     }
-  }
+  },
 );
-
-
 
 // Helper: to display error messages
 export const handleApiError = (error: unknown): string => {

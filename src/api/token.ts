@@ -15,7 +15,7 @@ export const tokenStore = {
   },
 
   getRefreshPromise: () => refreshPromise,
-  setRefreshPromise: (p: Promise<string | null>) => {
+  setRefreshPromise: (p: Promise<string | null> | null) => {
     refreshPromise = p;
   },
 };
