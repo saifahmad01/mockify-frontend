@@ -17,6 +17,7 @@ import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as Oauth2RedirectRouteImport } from './routes/oauth2/redirect'
 import { Route as PublicDocsRouteImport } from './routes/_public/docs'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
+import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as ProtectedOrganizationsIndexRouteImport } from './routes/_protected/organizations/index'
@@ -61,6 +62,11 @@ const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/$': typeof SplatRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
+  '/reset-password': typeof AuthResetPasswordRoute
   '/dashboard': typeof ProtectedDashboardRoute
   '/docs': typeof PublicDocsRoute
   '/oauth2/redirect': typeof Oauth2RedirectRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/$': typeof SplatRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
+  '/reset-password': typeof AuthResetPasswordRoute
   '/dashboard': typeof ProtectedDashboardRoute
   '/docs': typeof PublicDocsRoute
   '/oauth2/redirect': typeof Oauth2RedirectRoute
@@ -130,6 +138,7 @@ export interface FileRoutesById {
   '/$': typeof SplatRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/register': typeof AuthRegisterRoute
+  '/_auth/reset-password': typeof AuthResetPasswordRoute
   '/_protected/dashboard': typeof ProtectedDashboardRoute
   '/_public/docs': typeof PublicDocsRoute
   '/oauth2/redirect': typeof Oauth2RedirectRoute
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/login'
     | '/register'
+    | '/reset-password'
     | '/dashboard'
     | '/docs'
     | '/oauth2/redirect'
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/login'
     | '/register'
+    | '/reset-password'
     | '/dashboard'
     | '/docs'
     | '/oauth2/redirect'
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/_auth/login'
     | '/_auth/register'
+    | '/_auth/reset-password'
     | '/_protected/dashboard'
     | '/_public/docs'
     | '/oauth2/redirect'
@@ -250,6 +262,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDashboardRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
+    '/_auth/reset-password': {
+      id: '/_auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/_auth/register': {
       id: '/_auth/register'
       path: '/register'
@@ -298,11 +317,13 @@ declare module '@tanstack/react-router' {
 interface AuthRouteRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(

@@ -31,6 +31,17 @@ export const authApi = {
     return response.data;
   },
 
+  forgotPassword: async (email: string): Promise<void> => {
+    await apiClient.post('/auth/forgot-password', { email });
+  },
+
+  resetPassword: async (data: {
+    token: string;
+    newPassword: string;
+  }): Promise<void> => {
+    await apiClient.post('/auth/reset-password', data);
+  },
+
   getGoogleAuthUrl: (): string => {
     const baseUrl =
       import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/';

@@ -132,6 +132,17 @@ function LoginPage() {
                   </FormItem>
                 )}
               />
+
+              {/* TODO: Adjust the gap between forget password link and the input field */}
+              <div className="flex justify-end">
+                <Link
+                  to="/reset-password"
+                  className="text-xs text-primary hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
               <FormField
                 control={form.control}
                 name="password"
